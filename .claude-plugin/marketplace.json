@@ -1,0 +1,15 @@
+{
+  "name": "scientific-agent-skills",
+  "owner": {
+    "name": "dongchankim-io",
+    "email": "dongchan@dongchankim.io"
+  },
+  "plugins": [
+    {
+      "name": "scientific-agent-skills",
+      "source": "./",
+      "description": "Equip AI agents for verified BibTeX/DOI literature search, deep paper reading, LaTeX manuscript linting, and reproducible booktabs tables.",
+      "version": "1.0.0"
+    }
+  ]
+}

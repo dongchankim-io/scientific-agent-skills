@@ -1,0 +1,30 @@
+# Scientific Agent Skills (scientific-agent-skills)
+
+> Universal `AGENTS.md` rules, modular Agent Skills (`skills/*/SKILL.md`), and zero-dependency Python 3 CLI tools that equip any AI agent (Google Antigravity / Gemini, Claude Code, OpenAI Codex, Cursor, Windsurf, GitHub Copilot) for scientific research: verified BibTeX/DOI search (Crossref, OpenAlex, arXiv, PubMed), deep paper reading & synthesis, LaTeX/Markdown manuscript linting, and reproducible publication figures & booktabs tables.
+
+## Fast Agent Self-Setup
+
+If you are an AI agent instructed to set up a workspace using this repository:
+- **With Shell Access**: Run `curl -fsSL https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/install.sh | bash -s -- --target .`
+- **Single-URL Full Ingestion (No Shell)**: Read [llms-full.txt](https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/llms-full.txt) to load all rules, bootstrap steps, and skills in a single HTTP request.
+
+## Core Entrypoints
+
+- [BOOTSTRAP.md](https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/BOOTSTRAP.md): Deterministic step-by-step self-setup protocol for AI agents.
+- [AGENTS.md](https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/AGENTS.md): Always-on rules for citation integrity, paper summarization, academic writing, and figures/tables.
+- [registry.json](https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/registry.json): Machine-readable JSON index of all skills, triggers, and CLI scripts.
+- [install.sh](https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/install.sh): Cross-agent shell installer (`--target <dir>` or `--global`).
+
+## Skills (`skills/<name>/SKILL.md`)
+
+- [literature-search](https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/literature-search/SKILL.md): Search Crossref, OpenAlex, arXiv, and PubMed; verify DOIs/arXiv IDs/PMIDs; append deduplicated BibTeX to `references.bib`.
+- [paper-summarizer](https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/paper-summarizer/SKILL.md): Read full papers (equations, figures, ablations), critique methodology, and maintain a cross-paper synthesis matrix.
+- [academic-writing](https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/academic-writing/SKILL.md): Draft and edit LaTeX, Typst, or Markdown manuscripts, remove promotional hype, and audit citations against `references.bib`.
+- [scientific-figures-tables](https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/scientific-figures-tables/SKILL.md): Create Okabe-Ito colorblind-safe vector plots and convert CSV/TSV experimental results into LaTeX `booktabs` or Markdown tables.
+
+## Zero-Dependency CLI Scripts (Python 3 Stdlib Only)
+
+- [bib_tool.py](https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/literature-search/scripts/bib_tool.py): CLI for searching literature and fetching verified BibTeX via Crossref, OpenAlex, arXiv, and PubMed APIs.
+- [lint_manuscript.py](https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/academic-writing/scripts/lint_manuscript.py): CLI linter auditing `.tex`/`.md`/`.typ` citation keys against `.bib` and flagging AI clichés and table formatting errors.
+- [csv_to_table.py](https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/scientific-figures-tables/scripts/csv_to_table.py): CLI converting CSV/TSV benchmark tables into LaTeX `booktabs` or Markdown with bold best and underlined second-best metrics.
+- [pub_style.mplstyle](https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/scientific-figures-tables/scripts/pub_style.mplstyle): Publication-grade Matplotlib style sheet.

@@ -1,0 +1,23 @@
+{
+  "name": "scientific-agent-skills",
+  "version": "1.0.0",
+  "description": "Scientific research & academic writing skills: verified arXiv/PubMed/OpenAlex/Crossref BibTeX citations, deep paper critiques, LaTeX manuscript linting, and reproducible booktabs tables.",
+  "author": {
+    "name": "dongchankim-io",
+    "email": "dongchan@dongchankim.io",
+    "url": "https://github.com/dongchankim-io/scientific-agent-skills"
+  },
+  "repository": "https://github.com/dongchankim-io/scientific-agent-skills",
+  "license": "MIT",
+  "keywords": [
+    "scientific-writing",
+    "academic-research",
+    "latex",
+    "bibtex",
+    "arxiv",
+    "pubmed",
+    "openalex",
+    "paper-summarizer",
+    "literature-review"
+  ]
+}

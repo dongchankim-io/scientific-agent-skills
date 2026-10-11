@@ -2,10 +2,10 @@
 # ==============================================================================
 # Scientific Agent Skills Installer (install.sh)
 # Configures a project workspace or global machine environment for:
-# - Universal AGENTS.md + .agents/skills/
-# - Google Antigravity / Gemini (GEMINI.md + ~/.gemini/config/skills/)
+# - Universal AGENTS.md + .agents/skills/ + skills/
+# - Google Antigravity / Gemini (GEMINI.md + ~/.gemini/config/plugins/scientific-agent-skills)
 # - Claude Code (CLAUDE.md + .claude/skills/)
-# - Cursor (.cursor/rules/scientific.mdc) & GitHub Copilot
+# - Cursor (.cursor/rules/scientific-agent-skills.mdc) & GitHub Copilot (.github/copilot-instructions.md)
 # ==============================================================================
 
 set -euo pipefail
@@ -48,7 +48,6 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# Locate source directory (either local script directory or shallow git clone if piped via curl)
 SCRIPT_SOURCE="${BASH_SOURCE[0]:-}"
 CLEANUP_TMP=""
 
@@ -75,7 +74,7 @@ install_into_workspace() {
 
   echo "[scientific-agent-skills] Configuring workspace at: $dest"
 
-  # 1. Install universal AGENTS.md and agent-specific compatibility files
+  # 1. Install universal AGENTS.md and agent-specific compatibility links
   cp "$SRC_DIR/AGENTS.md" "$dest/AGENTS.md"
 
   for compat_file in "GEMINI.md" "CLAUDE.md"; do
@@ -84,18 +83,25 @@ install_into_workspace() {
     fi
   done
 
-  # 2. Install .agents/skills/
+  # 2. Install skills into .agents/skills/
   mkdir -p "$dest/.agents/skills"
-  cp -R "$SRC_DIR/.agents/skills/"* "$dest/.agents/skills/"
+  cp -RL "$SRC_DIR/skills/"* "$dest/.agents/skills/"
   chmod +x "$dest/.agents/skills/"*/scripts/*.py 2>/dev/null || true
 
   # 3. Create .claude/skills symlink for Claude Code compatibility
   mkdir -p "$dest/.claude"
   if [[ ! -e "$dest/.claude/skills" ]]; then
-    ln -s "../.agents/skills" "$dest/.claude/skills" 2>/dev/null || cp -R "$SRC_DIR/.agents/skills" "$dest/.claude/skills"
+    ln -s "../.agents/skills" "$dest/.claude/skills" 2>/dev/null || cp -RL "$SRC_DIR/skills" "$dest/.claude/skills"
   fi
 
-  # 4. Create research directories and starter templates (non-destructive)
+  # 4. Install Cursor & GitHub Copilot discovery files
+  mkdir -p "$dest/.cursor/rules" "$dest/.github"
+  cp "$SRC_DIR/.cursor/rules/scientific-agent-skills.mdc" "$dest/.cursor/rules/scientific-agent-skills.mdc"
+  if [[ ! -f "$dest/.github/copilot-instructions.md" ]]; then
+    cp "$SRC_DIR/.github/copilot-instructions.md" "$dest/.github/copilot-instructions.md"
+  fi
+
+  # 5. Create research directories and starter templates (non-destructive)
   mkdir -p "$dest/papers/notes" "$dest/manuscripts" "$dest/figures" "$dest/tables" "$dest/templates"
   cp "$SRC_DIR/templates/paper_note_template.md" "$dest/templates/paper_note_template.md"
   cp "$SRC_DIR/templates/synthesis_matrix.md" "$dest/templates/synthesis_matrix.md"
@@ -108,7 +114,7 @@ install_into_workspace() {
   fi
 
   echo "[scientific-agent-skills] Workspace configuration complete!"
-  echo "  - Rules:      $dest/AGENTS.md (linked to GEMINI.md & CLAUDE.md)"
+  echo "  - Rules:      $dest/AGENTS.md (linked to GEMINI.md, CLAUDE.md, .cursor/rules, .github/copilot-instructions.md)"
   echo "  - Skills:     $dest/.agents/skills/ (linked to .claude/skills/)"
   echo "  - Templates:  $dest/templates/ & $dest/references.bib"
 }
@@ -118,27 +124,34 @@ install_global() {
 
   # 1. Universal ~/.agents/skills
   mkdir -p "$HOME/.agents/skills"
-  cp -R "$SRC_DIR/.agents/skills/"* "$HOME/.agents/skills/"
+  cp -RL "$SRC_DIR/skills/"* "$HOME/.agents/skills/"
   chmod +x "$HOME/.agents/skills/"*/scripts/*.py 2>/dev/null || true
 
-  # 2. Google Antigravity / Gemini (~/.gemini/config)
+  # 2. Google Antigravity / Gemini Plugin (~/.gemini/config/plugins/scientific-agent-skills) & Skills
   mkdir -p "$HOME/.gemini/config/skills"
-  cp -R "$SRC_DIR/.agents/skills/"* "$HOME/.gemini/config/skills/"
-  if [[ ! -f "$HOME/.gemini/config/GEMINI.md" ]]; then
-    cp "$SRC_DIR/AGENTS.md" "$HOME/.gemini/config/GEMINI.md"
-  fi
+  cp -RL "$SRC_DIR/skills/"* "$HOME/.gemini/config/skills/"
+  chmod +x "$HOME/.gemini/config/skills/"*/scripts/*.py 2>/dev/null || true
+
+  local agy_plugin="$HOME/.gemini/config/plugins/scientific-agent-skills"
+  mkdir -p "$agy_plugin/skills" "$agy_plugin/rules" "$agy_plugin/assets"
+  cp "$SRC_DIR/plugin.json" "$agy_plugin/plugin.json"
+  cp "$SRC_DIR/assets/logo.svg" "$agy_plugin/assets/logo.svg"
+  cp "$SRC_DIR/AGENTS.md" "$agy_plugin/rules/AGENTS.md"
+  cp -RL "$SRC_DIR/skills/"* "$agy_plugin/skills/"
+  chmod +x "$agy_plugin/skills/"*/scripts/*.py 2>/dev/null || true
 
   # 3. Claude Code (~/.claude/skills)
   mkdir -p "$HOME/.claude/skills"
-  cp -R "$SRC_DIR/.agents/skills/"* "$HOME/.claude/skills/"
+  cp -RL "$SRC_DIR/skills/"* "$HOME/.claude/skills/"
+  chmod +x "$HOME/.claude/skills/"*/scripts/*.py 2>/dev/null || true
   if [[ ! -f "$HOME/.claude/CLAUDE.md" ]]; then
     cp "$SRC_DIR/AGENTS.md" "$HOME/.claude/CLAUDE.md"
   fi
 
   echo "[scientific-agent-skills] Global installation complete!"
-  echo "  - Universal skills:   ~/.agents/skills/"
-  echo "  - Antigravity/Gemini: ~/.gemini/config/skills/ & ~/.gemini/config/GEMINI.md"
-  echo "  - Claude Code:        ~/.claude/skills/ & ~/.claude/CLAUDE.md"
+  echo "  - Universal skills:    ~/.agents/skills/"
+  echo "  - Antigravity Plugin:  ~/.gemini/config/plugins/scientific-agent-skills/"
+  echo "  - Claude Code:         ~/.claude/skills/ & ~/.claude/CLAUDE.md"
 }
 
 if [[ "$MODE" == "global" ]]; then

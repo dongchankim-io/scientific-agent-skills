@@ -1,0 +1,12 @@
+{
+  "name": "scientific-agent-skills",
+  "displayName": "Scientific Agent Skills",
+  "description": "Equip AI agents for scientific research and academic writing: verified BibTeX/DOI search (arXiv, PubMed, OpenAlex, Crossref), deep paper critiques, LaTeX/Markdown manuscript linting, and reproducible booktabs tables.",
+  "version": "1.0.0",
+  "logo": "assets/logo.svg",
+  "suggestedPrompts": [
+    "Search arXiv and OpenAlex for recent papers on our topic and add verified BibTeX entries to references.bib",
+    "Summarize this paper PDF with mathematical formulations, ablation findings, and a methodological critique",
+    "Audit my LaTeX manuscript against references.bib for missing citations, AI cliches, and booktabs formatting"
+  ]
+}

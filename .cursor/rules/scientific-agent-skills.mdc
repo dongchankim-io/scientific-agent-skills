@@ -1,0 +1,23 @@
+---
+description: Scientific Research & Academic Writing Rules (Verified BibTeX Citations, Paper Critiques, LaTeX Linting, and Booktabs Tables)
+globs: ["**/*.tex", "**/*.bib", "**/*.md", "**/*.typ", "**/*.py", "**/*.csv"]
+alwaysApply: true
+---
+
+# Scientific Research & Academic Writing Agent Rules
+
+Follow the rules defined in `AGENTS.md` and use the modular skills in `.agents/skills/` (or `skills/`):
+
+1. **Zero-Hallucination Citations (`skills/literature-search/SKILL.md`)**:
+   - Never fabricate DOIs, arXiv IDs, PMIDs, or BibTeX entries.
+   - Verify and append citations using `python3 skills/literature-search/scripts/bib_tool.py`.
+2. **Structured Paper Reading (`skills/paper-summarizer/SKILL.md`)**:
+   - Summarize papers with TL;DR, core contributions, mathematical formulations, ablation tables, and methodological critiques (`skills/paper-summarizer/references/review_rubric.md`).
+   - Compare multiple papers in `papers/synthesis_matrix.md`.
+3. **Academic Writing & Linting (`skills/academic-writing/SKILL.md`)**:
+   - Avoid promotional clichés ("delve", "groundbreaking", "paradigm shift", "seamlessly").
+   - Use `booktabs` (`\toprule`, `\midrule`, `\bottomrule`) in LaTeX tables.
+   - Audit manuscripts via `python3 skills/academic-writing/scripts/lint_manuscript.py <file> --bib references.bib`.
+4. **Reproducible Figures & Tables (`skills/scientific-figures-tables/SKILL.md`)**:
+   - Use `skills/scientific-figures-tables/scripts/pub_style.mplstyle` for plots.
+   - Convert CSV/TSV results to tables via `python3 skills/scientific-figures-tables/scripts/csv_to_table.py`.

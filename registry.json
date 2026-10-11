@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "scientific-agent-skills",
+  "version": "1.0.0",
+  "repository": "https://github.com/dongchankim-io/scientific-agent-skills",
+  "raw_base_url": "https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main",
+  "entrypoints": {
+    "bootstrap": "https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/BOOTSTRAP.md",
+    "llms_txt": "https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/llms.txt",
+    "llms_full_txt": "https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/llms-full.txt",
+    "rules": "https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/AGENTS.md",
+    "installer": "https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/install.sh"
+  },
+  "install_commands": {
+    "workspace_curl": "curl -fsSL https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/install.sh | bash -s -- --target .",
+    "global_curl": "curl -fsSL https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/install.sh | bash -s -- --global",
+    "npx_skills": "npx skills add dongchankim-io/scientific-agent-skills"
+  },
+  "skills": [
+    {
+      "name": "literature-search",
+      "path": "skills/literature-search/SKILL.md",
+      "raw_url": "https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/literature-search/SKILL.md",
+      "description": "Search scientific literature across Crossref, arXiv, OpenAlex, and PubMed; verify DOIs, arXiv IDs, and PMIDs; and generate or append verified BibTeX entries to references.bib without hallucinating citations.",
+      "triggers": ["search papers", "verify citation", "fetch bibtex", "lookup doi", "arxiv search", "pubmed search", "openalex"],
+      "scripts": [
+        {
+          "path": "skills/literature-search/scripts/bib_tool.py",
+          "raw_url": "https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/literature-search/scripts/bib_tool.py",
+          "runtime": "python3 (stdlib only)"
+        }
+      ]
+    },
+    {
+      "name": "paper-summarizer",
+      "path": "skills/paper-summarizer/SKILL.md",
+      "raw_url": "https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/paper-summarizer/SKILL.md",
+      "description": "Read, analyze, critique, and synthesize scientific papers from PDFs, preprints, or full text. Produces structured technical reading notes, methodological critiques, and multi-paper synthesis matrices.",
+      "triggers": ["summarize paper", "read pdf", "peer review", "critique methodology", "synthesis matrix", "compare papers"],
+      "references": [
+        {
+          "path": "skills/paper-summarizer/references/review_rubric.md",
+          "raw_url": "https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/paper-summarizer/references/review_rubric.md"
+        }
+      ]
+    },
+    {
+      "name": "academic-writing",
+      "path": "skills/academic-writing/SKILL.md",
+      "raw_url": "https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/academic-writing/SKILL.md",
+      "description": "Draft, edit, refine, and lint academic manuscripts in LaTeX (.tex), Typst (.typ), or Markdown (.md). Enforces clear academic prose, removes promotional hype, and audits citation keys against references.bib.",
+      "triggers": ["write paper", "edit latex", "lint manuscript", "check citations", "write abstract", "related work", "rebuttal"],
+      "scripts": [
+        {
+          "path": "skills/academic-writing/scripts/lint_manuscript.py",
+          "raw_url": "https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/academic-writing/scripts/lint_manuscript.py",
+          "runtime": "python3 (stdlib only)"
+        }
+      ]
+    },
+    {
+      "name": "scientific-figures-tables",
+      "path": "skills/scientific-figures-tables/SKILL.md",
+      "raw_url": "https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/scientific-figures-tables/SKILL.md",
+      "description": "Generate publication-grade scientific figures and convert experimental CSV/TSV/JSON data into reproducible LaTeX booktabs or Markdown tables with automatic best/second-best highlighting.",
+      "triggers": ["create figure", "plot results", "booktabs table", "csv to latex", "format benchmark table", "matplotlib style"],
+      "scripts": [
+        {
+          "path": "skills/scientific-figures-tables/scripts/csv_to_table.py",
+          "raw_url": "https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/scientific-figures-tables/scripts/csv_to_table.py",
+          "runtime": "python3 (stdlib only)"
+        },
+        {
+          "path": "skills/scientific-figures-tables/scripts/pub_style.mplstyle",
+          "raw_url": "https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/skills/scientific-figures-tables/scripts/pub_style.mplstyle",
+          "runtime": "matplotlib style"
+        }
+      ]
+    }
+  ]
+}

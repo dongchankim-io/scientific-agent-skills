@@ -1,0 +1,80 @@
+# Scientific Agent Skills — Full Agent Context Bundle (`llms-full.txt`)
+
+Repository: https://github.com/dongchankim-io/scientific-agent-skills
+Standard: AGENTS.md + Agent Skills (`skills/*/SKILL.md`) + Antigravity/Claude/Cursor Plugin Manifests
+
+================================================================================
+SECTION 1: BOOTSTRAP & SELF-SETUP PROTOCOL (BOOTSTRAP.md)
+================================================================================
+
+If a user asked you to configure their workspace for scientific research using this repository:
+1. If you have terminal access, run:
+   `curl -fsSL https://raw.githubusercontent.com/dongchankim-io/scientific-agent-skills/main/install.sh | bash -s -- --target .`
+   (or `--global` for machine-wide installation into `~/.agents/skills`, `~/.gemini/config/skills`, and `~/.claude/skills`).
+2. If you do not have terminal network access, write `AGENTS.md` (and link/copy to `GEMINI.md` and `CLAUDE.md`) and write the 4 skills below into `.agents/skills/<skill-name>/SKILL.md`, plus scaffold `papers/notes/`, `manuscripts/`, `figures/`, `tables/`, and `references.bib`.
+
+================================================================================
+SECTION 2: UNIVERSAL ALWAYS-ON RULES (AGENTS.md)
+================================================================================
+
+## 1. Citation & Literature Integrity (Strict Zero-Hallucination Policy)
+- Never fabricate or guess citations, DOIs, arXiv IDs, author lists, or publication years.
+- Verify every reference before adding it to a manuscript or `references.bib` using `python3 .agents/skills/literature-search/scripts/bib_tool.py` or built-in literature search tools.
+- Always include Title, First Author et al. (Year), Venue, and Persistent Identifier (`DOI` or `arXiv ID`).
+
+## 2. Paper Reading & Summarization Protocol
+- Inspect figures, tables, equations, and appendices directly rather than relying solely on the abstract.
+- Structure every paper summary with: Citation & Identifiers, TL;DR (2–3 sentences), Core Contributions, Methodology & Mathematical Formulation, Empirical Evaluation (exact numbers & ablations), and Methodological Critique.
+- When comparing 2+ papers, maintain `papers/synthesis_matrix.md`.
+
+## 3. Academic Writing & Manuscript Standards
+- Write in clear, objective, active academic prose. Eliminate promotional hype ("groundbreaking", "revolutionary", "paradigm shift", "seamlessly", "delve into", "tapestry").
+- Back comparative claims with exact metrics, error bars, or p-values.
+- In LaTeX, always use `booktabs` (`\toprule`, `\midrule`, `\bottomrule`); never use `\hline` or vertical table borders (`|`). Use `~\cite{}` and `~\cref{}`.
+- Audit drafts with `python3 .agents/skills/academic-writing/scripts/lint_manuscript.py <manuscript> --bib references.bib`.
+
+## 4. Reproducible Figures & Tables
+- Export vector graphics (`.pdf` or `.svg`) alongside 300 DPI `.png` previews using the Okabe-Ito colorblind-safe palette (`.agents/skills/scientific-figures-tables/scripts/pub_style.mplstyle`).
+- Generate LaTeX `booktabs` or Markdown tables directly from CSV/TSV files via `python3 .agents/skills/scientific-figures-tables/scripts/csv_to_table.py`.
+
+================================================================================
+SECTION 3: SKILL 1 — LITERATURE SEARCH (`skills/literature-search/SKILL.md`)
+================================================================================
+
+Commands for `.agents/skills/literature-search/scripts/bib_tool.py`:
+- Search:
+  `python3 .agents/skills/literature-search/scripts/bib_tool.py search "<query>" --source [crossref|openalex|arxiv|pubmed] --limit 5`
+- Fetch & append verified BibTeX by identifier:
+  `python3 .agents/skills/literature-search/scripts/bib_tool.py doi "<DOI>" --append references.bib`
+  `python3 .agents/skills/literature-search/scripts/bib_tool.py arxiv "<ARXIV_ID>" --append references.bib`
+  `python3 .agents/skills/literature-search/scripts/bib_tool.py pmid "<PMID>" --append references.bib`
+
+================================================================================
+SECTION 4: SKILL 2 — PAPER SUMMARIZER (`skills/paper-summarizer/SKILL.md`)
+================================================================================
+
+1. Save single-paper notes to `papers/notes/<citekey>.md` using `templates/paper_note_template.md`.
+2. Critique methodology across 5 rubric dimensions:
+   - Problem Formulation & Unstated Assumptions
+   - Baseline & Evaluation Fairness (compute parity, data leakage)
+   - Statistical Rigor (error bars, multi-seed variance)
+   - Ablation Completeness (isolating each proposed component)
+   - Reproducibility & Resource Transparency
+3. Update `papers/synthesis_matrix.md` (`BibTeX Key | Author (Year) & Venue | Core Problem | Methodology | Datasets | Headline Quantitative Result | Key Limitation`).
+
+================================================================================
+SECTION 5: SKILL 3 — ACADEMIC WRITING (`skills/academic-writing/SKILL.md`)
+================================================================================
+
+1. Abstract structure: (1) Context & Gap, (2) Proposal, (3) Quantitative Results, (4) Impact.
+2. Related Work: Group by thematic taxonomy rather than a chronological list.
+3. Run manuscript linter before completing any writing task:
+   `python3 .agents/skills/academic-writing/scripts/lint_manuscript.py <path/to/file.tex> --bib references.bib`
+
+================================================================================
+SECTION 6: SKILL 4 — SCIENTIFIC FIGURES & TABLES (`skills/scientific-figures-tables/SKILL.md`)
+================================================================================
+
+1. Load Matplotlib style: `plt.style.use(".agents/skills/scientific-figures-tables/scripts/pub_style.mplstyle")`.
+2. Convert CSV/TSV experimental results into LaTeX `booktabs` or Markdown tables with automatic bold best (`--highlight-max` / `--highlight-min`) and underlined second-best values:
+   `python3 .agents/skills/scientific-figures-tables/scripts/csv_to_table.py results.csv --format latex --caption "..." --label "tab:main" --highlight-max "Accuracy,F1" --highlight-min "RMSE"`
